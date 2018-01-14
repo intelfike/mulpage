@@ -43,6 +43,7 @@ func WriteFile(w http.ResponseWriter, fileName string) error {
 	if err != nil {
 		return err
 	}
+	defer f.Close()
 	io.Copy(w, f)
 	return nil
 }

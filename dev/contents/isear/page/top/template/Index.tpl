@@ -1,5 +1,5 @@
 {{define "page"}}
 ハロー！
 トップページだよ！
-{{.AssignData.mod}}
+{{.mod}}
 {{end}}

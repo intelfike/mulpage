@@ -13,7 +13,7 @@ var Pages = map[string]interface {
 	"top": &top.Page{},
 }
 
-func Call() {
+func init() {
 	ps := types.Pages{}
 	global.Contents.SetPages("isear", ps)
 	for key, val := range Pages {

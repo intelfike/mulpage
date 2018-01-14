@@ -21,12 +21,14 @@ type PageInfo struct {
 
 func DefaultPageInfo(contents, pageName, method string) *PageInfo {
 	info := &PageInfo{
-		Contents:   contents,
-		Page:       pageName,
-		Method:     method,
-		Template:   method,
-		Layout:     "default",
-		AssignData: map[string]string{},
+		Contents: contents,
+		Page:     pageName,
+		Method:   method,
+		Template: method,
+		Layout:   "default",
+		AssignData: map[string]string{
+			"Title": pageName + " - " + contents,
+		},
 	}
 	return info
 }

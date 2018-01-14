@@ -24,7 +24,7 @@ func init() {
 		path := httpio.ReadPath(r)
 		path = pathmod.ParseURIPath(path)
 		if len(path) == 0 || !strings.HasPrefix(path[0], "_") {
-			err := httpio.WriteFile(w, r.URL.Path)
+			err := httpio.WriteFile(w, "../public"+r.URL.Path)
 			if err == nil {
 				return
 			}
