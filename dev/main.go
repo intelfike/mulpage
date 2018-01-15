@@ -11,7 +11,7 @@ import (
 
 	httpio "github.com/intelfike/mulpage/dev/io/http"
 	htmlproc "github.com/intelfike/mulpage/dev/proc/policy/html"
-	pathmod "github.com/intelfike/mulpage/dev/proc/policy/path"
+	pathpol "github.com/intelfike/mulpage/dev/proc/policy/path"
 )
 
 var port = flag.String("http", ":80", "HTTP port number.")
@@ -22,10 +22,12 @@ func init() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		// パスを取得
 		path := httpio.ReadPath(r)
-		path = pathmod.ParseURIPath(path)
+		// パスをアプリケーション向けに変換
+		path = pathpol.ParseURIPath(path)
 		if len(path) == 0 || !strings.HasPrefix(path[0], "_") {
 			err := httpio.WriteFile(w, "../public"+r.URL.Path)
 			if err == nil {
+				// ファイルが見つからない場合の処理
 				return
 			}
 			return
@@ -34,16 +36,17 @@ func init() {
 			http.Redirect(w, r, path[0], 307)
 			return
 		}
-		// HTMLを生成
+		// HTMLを生成して送信
 		contents := httpio.ReadContents(r)
-		pageName := pathmod.AvailePageName(path[0])
-		redirect, err := htmlproc.Write(w, contents, pageName, path[1])
+		PackageName := pathpol.AvailePackageName(path[0])
+		redirect, err := htmlproc.Write(w, contents, PackageName, path[1])
 		if err != nil {
 			result := "エラー:" + fmt.Sprint(err) + "\n"
 			result += "エラーメッセージを記録して管理者に報告してください。"
 			httpio.Write(w, result)
 			return
 		}
+		// 必要ならリダイレクトする
 		if redirect != nil {
 			redirect.Exec(w, r)
 		}

@@ -14,14 +14,14 @@ import (
 )
 
 // テンプレートをHTMLに変換して取得する
-func Genelate(contents, pageName, method string) (string, *types.Redirect, error) {
+func Genelate(contents, packageName, method string) (string, *types.Redirect, error) {
 	b := new(bytes.Buffer)
-	redirect, err := Write(b, contents, pageName, method)
+	redirect, err := Write(b, contents, packageName, method)
 	return b.String(), redirect, err
 }
 
-func Write(w io.Writer, contents, pageName, method string) (*types.Redirect, error) {
-	info := types.DefaultPageInfo(contents, pageName, method)
+func Write(w io.Writer, contents, packageName, method string) (*types.Redirect, error) {
+	info := types.DefaultPageInfo(contents, packageName, method)
 	info.Assign("Rand", strconv.Itoa(rand.IntR()))
 	global.PageInfo = info
 	redirect, err := global.Contents.Exec(info)

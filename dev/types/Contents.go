@@ -4,21 +4,21 @@ import "errors"
 
 type Method func() *Redirect
 
-type Page map[string]Method
+type Package map[string]Method
 
-func (ms Page) SetMethod(key string, m Method) {
+func (ms Package) SetMethod(key string, m Method) {
 	ms[key] = m
 }
 
-type Pages map[string]Page
+type Content map[string]Package
 
-func (p Pages) SetPage(key string, ms Page) {
+func (p Content) SetPackage(key string, ms Package) {
 	p[key] = ms
 }
 
-type Contents map[string]Pages
+type Contents map[string]Content
 
-func (c Contents) SetPages(key string, p Pages) {
+func (c Contents) SetContent(key string, p Content) {
 	c[key] = p
 }
 func (c Contents) Exec(info *PageInfo) (*Redirect, error) {
@@ -26,9 +26,9 @@ func (c Contents) Exec(info *PageInfo) (*Redirect, error) {
 	if !ok {
 		return nil, errors.New(info.Contents + ":コンテンツは定義されていません")
 	}
-	p, ok := ps[info.Page]
+	p, ok := ps[info.Package]
 	if !ok {
-		return nil, errors.New(info.Page + ":ページは定義されていません")
+		return nil, errors.New(info.Package + ":ページは定義されていません")
 	}
 	m, ok := p[info.Method]
 	if !ok {

@@ -7,27 +7,25 @@ import (
 
 type PageInfo struct {
 	Contents string // dev/contents/*
-	Page     string // dev/contents/*/page/X
+	Package  string // dev/contents/*/page/X
 	Method   string // dev/contents/*/page/X/X.go.Method
 	// デフォルトでMethod名と同じ、変更可能
 	Template string // dev/contents/*/page/X/template/*.tpl
 	Layout   string
 
 	// 主にテンプレートに渡すデータたち
-	Title      string
-	PageBody   string
 	AssignData map[string]string
 }
 
-func DefaultPageInfo(contents, pageName, method string) *PageInfo {
+func DefaultPageInfo(contents, packageName, method string) *PageInfo {
 	info := &PageInfo{
 		Contents: contents,
-		Page:     pageName,
+		Package:  packageName,
 		Method:   method,
 		Template: method,
 		Layout:   "default",
 		AssignData: map[string]string{
-			"Title": pageName + " - " + contents,
+			"Title": packageName + " - " + contents,
 		},
 	}
 	return info
@@ -42,7 +40,7 @@ func (pi *PageInfo) ContentsPath() string {
 	return path
 }
 func (pi *PageInfo) PagePath() string {
-	path := filepath.Join(pi.ContentsPath(), "page", pi.Page)
+	path := filepath.Join(pi.ContentsPath(), "page", pi.Package)
 	return path
 }
 func (pi *PageInfo) PageTemplatePath() string {

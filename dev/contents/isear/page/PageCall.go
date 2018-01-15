@@ -6,19 +6,19 @@ import (
 	"github.com/intelfike/mulpage/dev/types"
 )
 
-// types.PageBaseを埋め込んだ./*/Pageを宣言してください。
-var Pages = map[string]interface {
-	Init(types.Page)
+// ./*/Pageをここに書いてください
+var Packages = map[string]interface {
+	Init(types.Package)
 }{
-	"top": &top.Page{},
+	"top": &top.Package{},
 }
 
 func init() {
-	ps := types.Pages{}
-	global.Contents.SetPages("isear", ps)
-	for key, val := range Pages {
-		p := types.Page{}
-		ps.SetPage(key, p)
+	ps := types.Content{}
+	for key, val := range Packages {
+		p := types.Package{}
+		ps.SetPackage(key, p)
 		val.Init(p)
 	}
+	global.Contents.SetContent("isear", ps)
 }

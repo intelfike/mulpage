@@ -2,10 +2,8 @@
 package httpio
 
 import (
-	"io"
 	"io/ioutil"
 	"net/http"
-	"os"
 	"strings"
 )
 
@@ -39,11 +37,18 @@ func Write(w http.ResponseWriter, s string) error {
 	return err
 }
 func WriteFile(w http.ResponseWriter, fileName string) error {
-	f, err := os.Open(fileName)
+	b, err := ioutil.ReadFile(fileName)
 	if err != nil {
 		return err
 	}
-	defer f.Close()
-	io.Copy(w, f)
+	conType := http.DetectContentType(b)
+	switch {
+	case strings.HasSuffix(fileName, ".css"):
+		conType = "text/css"
+	case strings.HasSuffix(fileName, ".js"):
+		conType = "text/javascript"
+	}
+	w.Header().Set("Content-Type", conType)
+	w.Write(b)
 	return nil
 }

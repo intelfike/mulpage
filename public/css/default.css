@@ -1,3 +1,22 @@
 body {
-	background-color: red;
+	margin: 0;
+}
+
+header h1 {
+	margin: 0;
+	padding: 16px;
+	background-color: #abf;
+}
+
+nav {
+
+}
+
+article {
+	padding: 16px;
+}
+
+footer{
+	background-color: #DDD;
+	padding: 8px;
 }
