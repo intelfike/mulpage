@@ -2,38 +2,49 @@ package types
 
 import "errors"
 
-type Method func() *Redirect
-
-type Package map[string]Method
-
-func (ms Package) SetMethod(key string, m Method) {
-	ms[key] = m
+// コンテンツの定義
+type Contents struct {
+	Before   Method
+	After    Method
+	Contents map[string]Content
 }
 
-type Content map[string]Package
-
-func (p Content) SetPackage(key string, ms Package) {
-	p[key] = ms
+func (cs *Contents) Init() {
+	cs.Contents = map[string]Content{}
 }
 
-type Contents map[string]Content
-
-func (c Contents) SetContent(key string, p Content) {
-	c[key] = p
+func (cs Contents) SetContent(key string, c Content) {
+	cs.Contents[key] = c
 }
-func (c Contents) Exec(info *PageInfo) (*Redirect, error) {
-	ps, ok := c[info.Contents]
+
+func (cs Contents) ExecBefore(info *PageInfo) *Redirect {
+	if cs.Before == nil {
+		return nil
+	}
+	return cs.Before(info)
+}
+
+func (cs Contents) ExecAfter(info *PageInfo) *Redirect {
+	if cs.After == nil {
+		return nil
+	}
+	return cs.After(info)
+}
+
+// 指定された関数を実行する
+func (cs Contents) Exec(info *PageInfo) (*Redirect, error) {
+	if red := cs.ExecBefore(info); red != nil {
+		return red, nil
+	}
+	con, ok := cs.Contents[info.Contents]
 	if !ok {
 		return nil, errors.New(info.Contents + ":コンテンツは定義されていません")
 	}
-	p, ok := ps[info.Package]
-	if !ok {
-		return nil, errors.New(info.Package + ":ページは定義されていません")
+	if red, err := con.Exec(info); red != nil || err != nil {
+		return red, err
 	}
-	m, ok := p[info.Method]
-	if !ok {
-		return nil, errors.New(info.Method + ":メソッドは定義されていません")
+	if red := cs.ExecBefore(info); red != nil {
+		return red, nil
 	}
-	redirect := m()
-	return redirect, nil
+	return nil, nil
 }

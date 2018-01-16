@@ -47,9 +47,7 @@ func init() {
 			return
 		}
 		// 必要ならリダイレクトする
-		if redirect != nil {
-			redirect.Exec(w, r)
-		}
+		redirect.Exec(w, r)
 	})
 }
 

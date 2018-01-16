@@ -17,7 +17,7 @@ func ParseURIPath(path []string) []string {
 }
 
 // パスをファイルパスで利用可能な形に変換する
-func AvailePackageName(PackageName string) string {
+func AvailePackageName(pn string) string {
 	pn = strings.TrimPrefix(pn, "_")
 	return pn
 }
