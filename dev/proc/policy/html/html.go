@@ -21,7 +21,7 @@ var ContentList = map[string]ifc.Content{
 
 func init() {
 	for key, val := range ContentList {
-		content := types.Content{}
+		content := &types.Content{}
 		content.Init()
 		global.Contents.SetContent(key, content)
 		val.Init(content)
@@ -40,8 +40,9 @@ func Write(w io.Writer, contents, packageName, method string) (*types.Redirect, 
 	// PageInfo 定義
 	info := &types.PageInfo{}
 	info.Init(contents, packageName, method)
-	info.AddTpl(info.LayoutPath(), info.PageTemplatePath())
 	info.Assign("Rand", strconv.Itoa(rand.IntR()))
+	// ここじゃないいいいいいい！！！！！！！
+	info.AddTpl(info.LayoutPath(), info.PageTemplatePath())
 
 	// 関数実行
 	redirect, err := global.Contents.Exec(info)

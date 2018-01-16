@@ -19,9 +19,9 @@ type Content struct{}
 
 var _ ifc.Content = &Content{}
 
-func (c *Content) Init(content types.Content) {
+func (c *Content) Init(content *types.Content) {
 	for key, val := range PackageList {
-		p := types.Package{}
+		p := &types.Package{}
 		p.Init()
 		content.SetPackage(key, p)
 		val.Init(p)
