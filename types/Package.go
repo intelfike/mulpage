@@ -7,12 +7,19 @@ import (
 
 // パッケージの定義
 type Package struct {
+	Title   string
 	Before  Method
 	After   Method
 	Methods map[string]Method
 }
 
-func (pack *Package) Init() {
+type PackageIfc interface {
+	Define(*Package)
+	Title() string
+}
+
+func (pack *Package) Init(title string) {
+	pack.Title = title
 	pack.Methods = map[string]Method{}
 }
 

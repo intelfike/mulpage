@@ -8,23 +8,16 @@ import (
 
 	isear "github.com/intelfike/mulpage/contents/isear/page"
 	"github.com/intelfike/mulpage/global"
-	"github.com/intelfike/mulpage/ifc"
 	"github.com/intelfike/mulpage/proc/module/rand"
 	"github.com/intelfike/mulpage/types"
 )
 
-// コンテンツのリストを定義
-var ContentList = map[string]ifc.Content{
-	"isear": &isear.Content{},
-}
-
 func init() {
-	for key, val := range ContentList {
-		content := &types.Content{}
-		content.Init()
-		global.Contents.SetContent(key, content)
-		val.Init(content)
+	// コンテンツのリストを定義
+	var ContentList = map[string]types.ContentIfc{
+		"isear": &isear.Content{},
 	}
+	global.Contents.Init("mulpage", ContentList)
 }
 
 // テンプレートをHTMLに変換して取得する

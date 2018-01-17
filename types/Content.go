@@ -4,13 +4,25 @@ package types
 import "errors"
 
 type Content struct {
+	Name     string
 	Before   Method
 	After    Method
 	Packages map[string]*Package
 }
 
-func (con *Content) Init() {
+type ContentIfc interface {
+	Define(*Content)
+}
+
+func (con *Content) Init(name string, PackageList map[string]PackageIfc) {
+	con.Name = name
 	con.Packages = map[string]*Package{}
+	for key, val := range PackageList {
+		p := &Package{}
+		p.Init(val.Title())
+		con.SetPackage(key, p)
+		val.Define(p)
+	}
 }
 
 func (c Content) SetPackage(key string, p *Package) {

@@ -4,14 +4,20 @@ import "errors"
 
 // コンテンツの定義
 type Contents struct {
-	Title    string
+	Name     string
 	Before   Method
 	After    Method
 	Contents map[string]*Content
 }
 
-func (cs *Contents) Init() {
+func (cs *Contents) Init(name string, ContentList map[string]ContentIfc) {
+	cs.Name = name
 	cs.Contents = map[string]*Content{}
+	for key, val := range ContentList {
+		content := &Content{}
+		cs.SetContent(key, content)
+		val.Define(content)
+	}
 }
 
 func (cs Contents) SetContent(key string, c *Content) {
