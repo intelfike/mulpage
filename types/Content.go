@@ -19,7 +19,6 @@ func (con *Content) Init(name string, PackageList map[string]PackageIfc) {
 	con.Packages = map[string]*Package{}
 	for key, val := range PackageList {
 		p := &Package{}
-		p.Init(val.Title())
 		con.SetPackage(key, p)
 		val.Define(p)
 	}

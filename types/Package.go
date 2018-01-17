@@ -3,11 +3,12 @@ package types
 import (
 	"errors"
 	"fmt"
+	"os"
 )
 
 // パッケージの定義
 type Package struct {
-	Title   string
+	Name    string
 	Before  Method
 	After   Method
 	Methods map[string]Method
@@ -15,15 +16,18 @@ type Package struct {
 
 type PackageIfc interface {
 	Define(*Package)
-	Title() string
 }
 
-func (pack *Package) Init(title string) {
-	pack.Title = title
+func (pack *Package) Init(name string) {
+	pack.Name = name
 	pack.Methods = map[string]Method{}
 }
 
 func (ms *Package) SetMethod(key string, m Method) {
+	if ms.Methods == nil {
+		fmt.Println("types.Packageは必ずInit()してください\n例: pack.Init()")
+		os.Exit(1)
+	}
 	ms.Methods[key] = m
 }
 

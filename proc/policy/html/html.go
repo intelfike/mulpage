@@ -39,6 +39,7 @@ func Write(w io.Writer, contents, packageName, method string) (*types.Redirect, 
 	if err != nil {
 		return redirect, err
 	}
+
 	// テンプレート追加はPackage.Exec後
 	info.AddTpl(info.LayoutPath(), info.PageTemplatePath())
 	// テンプレート実行

@@ -7,15 +7,14 @@ import (
 	"github.com/intelfike/mulpage/types"
 )
 
-// パッケージのリストを定義
-var PackageList = map[string]types.PackageIfc{
-	"top":     &top.Package{},
-	"support": &support.Package{},
-	"usage":   &usage.Package{},
-}
-
 type Content struct{}
 
 func (c *Content) Define(content *types.Content) {
+	// パッケージのリストを定義
+	var PackageList = map[string]types.PackageIfc{
+		"top":     &top.Package{},
+		"support": &support.Package{},
+		"usage":   &usage.Package{},
+	}
 	content.Init("isear", PackageList)
 }
