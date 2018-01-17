@@ -1,4 +1,3 @@
-// "github.com/intelfike/mulpage/dev/proc/html"
 package html
 
 import (
@@ -7,11 +6,11 @@ import (
 	"io"
 	"strconv"
 
-	isear "github.com/intelfike/mulpage/dev/contents/isear/page"
-	"github.com/intelfike/mulpage/dev/global"
-	"github.com/intelfike/mulpage/dev/ifc"
-	"github.com/intelfike/mulpage/dev/proc/module/rand"
-	"github.com/intelfike/mulpage/dev/types"
+	isear "github.com/intelfike/mulpage/contents/isear/page"
+	"github.com/intelfike/mulpage/global"
+	"github.com/intelfike/mulpage/ifc"
+	"github.com/intelfike/mulpage/proc/module/rand"
+	"github.com/intelfike/mulpage/types"
 )
 
 // コンテンツのリストを定義
@@ -41,14 +40,14 @@ func Write(w io.Writer, contents, packageName, method string) (*types.Redirect, 
 	info := &types.PageInfo{}
 	info.Init(contents, packageName, method)
 	info.Assign("Rand", strconv.Itoa(rand.IntR()))
-	// ここじゃないいいいいいい！！！！！！！
-	info.AddTpl(info.LayoutPath(), info.PageTemplatePath())
 
 	// 関数実行
 	redirect, err := global.Contents.Exec(info)
 	if err != nil {
 		return redirect, err
 	}
+	// テンプレート追加はPackage.Exec後
+	info.AddTpl(info.LayoutPath(), info.PageTemplatePath())
 	// テンプレート実行
 	tpl, err := template.ParseFiles(info.TemplateFiles...)
 	if err != nil {

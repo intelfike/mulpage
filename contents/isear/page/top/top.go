@@ -1,13 +1,17 @@
 package top
 
 import (
-	"github.com/intelfike/mulpage/dev/ifc"
-	"github.com/intelfike/mulpage/dev/types"
+	"github.com/intelfike/mulpage/ifc"
+	"github.com/intelfike/mulpage/types"
 )
 
 type Package struct{}
 
 var _ ifc.Package = &Package{}
+
+func (p *Package) LinkText() string {
+	return "トップページ"
+}
 
 func (p *Package) Init(pack *types.Package) {
 	pack.Before = func(info *types.PageInfo) *types.Redirect {

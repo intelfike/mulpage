@@ -9,9 +9,9 @@ import (
 	"net/http"
 	"strings"
 
-	httpio "github.com/intelfike/mulpage/dev/io/http"
-	htmlproc "github.com/intelfike/mulpage/dev/proc/policy/html"
-	pathpol "github.com/intelfike/mulpage/dev/proc/policy/path"
+	httpio "github.com/intelfike/mulpage/io/http"
+	htmlproc "github.com/intelfike/mulpage/proc/policy/html"
+	pathpol "github.com/intelfike/mulpage/proc/policy/path"
 )
 
 var port = flag.String("http", ":80", "HTTP port number.")
@@ -25,7 +25,7 @@ func init() {
 		// パスをアプリケーション向けに変換
 		path = pathpol.ParseURIPath(path)
 		if len(path) == 0 || !strings.HasPrefix(path[0], "_") {
-			err := httpio.WriteFile(w, "../public"+r.URL.Path)
+			err := httpio.WriteFile(w, "public"+r.URL.Path)
 			if err == nil {
 				// ファイルが見つからない場合の処理
 				return

@@ -2,16 +2,15 @@
 <html lang="ja">
 <head>
 	<meta charset="UTF-8">
-	<title>{{.Title}} - isear</title>
+	<title>{{.Title}} | isear</title>
 	<link rel="stylesheet" href="/css/default.css?_={{.Rand}}">
 </head>
 <body>
 
 <header>
-	<!-- <img src="/image/isear_440×280.png" height="64" alt="isear"> -->
-	<h1>
-		<a href="/" class="normal">isear document</a>
-	</h1>
+	<a href="/" class="normal" style="padding:10px;">
+		<img src="/data/image/isear_document_title.png" height="40" alt="isear">
+	</a>
 </header>
 
 

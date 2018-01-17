@@ -1,6 +1,6 @@
 package ifc
 
-import "github.com/intelfike/mulpage/dev/types"
+import "github.com/intelfike/mulpage/types"
 
 type Content interface {
 	Init(*types.Content)

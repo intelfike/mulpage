@@ -1,11 +1,11 @@
 package page
 
 import (
-	"github.com/intelfike/mulpage/dev/contents/isear/page/support"
-	"github.com/intelfike/mulpage/dev/contents/isear/page/top"
-	"github.com/intelfike/mulpage/dev/contents/isear/page/usage"
-	"github.com/intelfike/mulpage/dev/ifc"
-	"github.com/intelfike/mulpage/dev/types"
+	"github.com/intelfike/mulpage/contents/isear/page/support"
+	"github.com/intelfike/mulpage/contents/isear/page/top"
+	"github.com/intelfike/mulpage/contents/isear/page/usage"
+	"github.com/intelfike/mulpage/ifc"
+	"github.com/intelfike/mulpage/types"
 )
 
 // パッケージのリストを定義

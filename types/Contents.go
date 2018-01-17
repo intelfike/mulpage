@@ -4,6 +4,7 @@ import "errors"
 
 // コンテンツの定義
 type Contents struct {
+	Title    string
 	Before   Method
 	After    Method
 	Contents map[string]*Content

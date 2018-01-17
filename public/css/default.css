@@ -1,18 +1,42 @@
 body {
 	margin: 0;
+	background-color: #DDD;
 }
 
+header {
+	/*padding: 0 16px;*/
+	display: flex;
+	background-color: #abf;
+}
 header h1 {
 	margin: 0;
 	padding: 16px;
-	background-color: #abf;
+}
+.normal:hover, .normal:visited, .normal:link, .normal:active{
+	color: black;
+	text-decoration: none;
+}
+
+div#middle {
+	display: flex;
 }
 
 nav {
-
+	padding: 16px 0;
+	flex-shrink: 0;
+	display: block;
+	width: 200px;
+	background-color: #ffb;
+}
+nav ul li {
+	margin: 16px 0;
 }
 
 article {
+	flex-shrink: 1;
+	min-height: 256px;
+	width: 100%;
+	background-color: #fff;
 	padding: 16px;
 }
 
