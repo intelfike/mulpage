@@ -1,6 +1,7 @@
 package page
 
 import (
+	"github.com/intelfike/mulpage/contents/isear/page/install"
 	"github.com/intelfike/mulpage/contents/isear/page/support"
 	"github.com/intelfike/mulpage/contents/isear/page/top"
 	"github.com/intelfike/mulpage/contents/isear/page/usage"
@@ -15,6 +16,7 @@ func (c *Content) Define(content *types.Content) {
 		"top":     &top.Package{},
 		"support": &support.Package{},
 		"usage":   &usage.Package{},
+		"install": &install.Package{},
 	}
 	content.Init("isear", PackageList)
 
