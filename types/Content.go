@@ -28,9 +28,9 @@ func (c Content) SetPackage(key string, p *Package) {
 	c.Packages[key] = p
 }
 
-func (con Content) Exec(info *PageInfo) (*Redirect, error) {
+func (con Content) Exec(tpl *TplData, info PageInfo) (*Redirect, error) {
 	// 前置処理
-	if red, _ := con.Before.Exec(info); red != nil {
+	if red, _ := con.Before.Exec(tpl, info); red != nil {
 		return red, nil
 	}
 	// 実行
@@ -38,10 +38,10 @@ func (con Content) Exec(info *PageInfo) (*Redirect, error) {
 	if !ok {
 		return nil, errors.New(info.Package + ":パッケージは定義されていません")
 	}
-	if red, err := pack.Exec(info); red != nil {
+	if red, err := pack.Exec(tpl, info); red != nil {
 		return red, err
 	}
 	// 後置処理
-	red, _ := con.After.Exec(info)
+	red, _ := con.After.Exec(tpl, info)
 	return red, nil
 }

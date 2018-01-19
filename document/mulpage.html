@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<title>mulpage</title>
+<mate charset="utf-8">
+<style>
+body {
+	background-color: #FFC;
+	font-size: 18px;
+}
+table {
+	border-spacing: 0;
+	margin: 16px;
+	border-collapse: collapse;
+}
+th{
+	background-color: white !important;
+	padding: 8px;
+	border: 1px solid black;
+}
+th, td{
+	margin: 0;
+	vertical-align: top;
+}
+.work{
+	border-right: 1px solid black;
+	border-left: 1px solid black;
+	background-color: white;
+}
+.arrow{
+	background-color: rgba(0,0,0,0);
+	text-align: center;
+	font-size: 80%;
+}
+.left.work{
+	background-color: #CCC;
+}
+.left.arrow{
+	background-color: #AAA;
+}
+#tip{
+	display: none;
+	position: absolute;
+	background-color: #DEF;
+	border: 1px solid black;
+	padding: 8px;
+	pointer-events: none;
+}
+
+</style>
+
+<script>
+window.onload = function(){
+	document.body.style.marginBottom = window.innerHeight + 'px'
+}
+
+function showTip(e, text){
+	tip.innerHTML = text
+	tip.style.left = (window.scrollX + e.clientX+1) + 'px'
+	tip.style.top = (window.scrollY + e.clientY+1) + 'px'
+	tip.style.display = 'block'
+}
+function hideTip(){
+	tip.style.display = 'none'
+}
+</script>
+
+<div id="tip"></div>
+
+<h1>mulpage</h1>
+<h2>1, 起動時</h2>
+<p>1, TplDataを定義<br>
+Define内で定義するデータは別に方を用意して、先頭にDef(Default)をつけるようにする
+デフォルトデータを、必要があればMethod.Exec時点で上書き用変数に書き込むことで上書きする
+</p><table>
+<tr>
+	<th class="col-0">main</th>
+	<th class="col-1"></th>
+	<th class="col-2">page</th>
+	<th class="col-3"></th>
+	<th class="col-4">top</th>
+</tr>
+<tr>
+	<td class="work col-0 row-0" style="background-color:;">1, init開始</td>
+	<td id="wflow-1" class="empty arrow col-1 row-0"></td>
+	<td id="wflow-1" class="empty work col-2 row-0"></td>
+	<td id="wflow-1" class="empty arrow col-3 row-0"></td>
+	<td id="wflow-1" class="empty work col-4 row-0"></td>
+</tr>
+<tr>
+	<td class="work col-0 row-1" style="background-color:;">2, リスナーを定義</td>
+	<td id="wflow-2" class="empty arrow col-1 row-1"></td>
+	<td id="wflow-2" class="empty work col-2 row-1"></td>
+	<td id="wflow-2" class="empty arrow col-3 row-1"></td>
+	<td id="wflow-2" class="empty work col-4 row-1"></td>
+</tr>
+<tr>
+	<td class="work col-0 row-2" style="background-color:;">3, global.DefTplDataを初期化</td>
+	<td id="wflow-3" class="empty arrow col-1 row-2"></td>
+	<td id="wflow-3" class="empty work col-2 row-2"></td>
+	<td id="wflow-3" class="empty arrow col-3 row-2"></td>
+	<td id="wflow-3" class="empty work col-4 row-2"></td>
+</tr>
+<tr>
+	<td class="work col-0 row-3" style="background-color:;">4, global.DefPageInfo</td>
+	<td id="wflow-4" class="empty arrow col-1 row-3"></td>
+	<td id="wflow-4" class="empty work col-2 row-3"></td>
+	<td id="wflow-4" class="empty arrow col-3 row-3"></td>
+	<td id="wflow-4" class="empty work col-4 row-3"></td>
+</tr>
+<tr>
+	<td class="work col-0 row-4" style="background-color:;">5, types.App を初期化</td>
+	<td class="arrow col-1 row-4" style="">==[CONTENT.Content.Define()]=></td>
+	<td class="work col-2 row-4" style="background-color:;">6, types.Content を初期化</td>
+	<td class="arrow col-3 row-4" style="">==[PACKAGE.Package.Define()]=></td>
+	<td class="work col-4 row-4" style="background-color:;">7, types.Package を初期化</td>
+</tr>
+<tr>
+	<td id="wflow-6" class="empty work left col-0 row-5"></td>
+	<td id="wflow-6" class="empty arrow left col-1 row-5"></td>
+	<td id="wflow-6" class="empty work left col-2 row-5"></td>
+	<td id="wflow-6" class="empty arrow left col-3 row-5"></td>
+	<td class="work col-4 row-5" style="background-color:;">↓</td>
+</tr>
+<tr>
+	<td class="work col-0 row-6" style="background-color:;">9, リッスン開始</td>
+	<td class="arrow col-1 row-6" style=""><==</td>
+	<td class="arrow col-2 row-6" style="border-top:1px solid black; border-bottom:1px solid black;"><==</td>
+	<td class="arrow col-3 row-6" style=""><==</td>
+	<td class="work col-4 row-6" style="background-color:;">8, types.Package.SetMethod()で関数を定義</td>
+</tr>
+</table>
+<h2>2, リクエストごと</h2>
+<p>こちらで定義する情報は、受信はPageInfo、テンプレート応答はTplDataで行う
+</p><table>
+<tr>
+	<th class="col-0">main</th>
+	<th class="col-1"></th>
+	<th class="col-2">html</th>
+	<th class="col-3"></th>
+	<th class="col-4">html/template</th>
+	<th class="col-5"></th>
+	<th class="col-6">Method</th>
+</tr>
+<tr>
+	<td class="work col-0 row-0" style="background-color:;">1, リクエスト内容を解釈</td>
+	<td id="wflow-1" class="empty arrow col-1 row-0"></td>
+	<td id="wflow-1" class="empty work col-2 row-0"></td>
+	<td id="wflow-1" class="empty arrow col-3 row-0"></td>
+	<td id="wflow-1" class="empty work col-4 row-0"></td>
+	<td id="wflow-1" class="empty arrow col-5 row-0"></td>
+	<td id="wflow-1" class="empty work col-6 row-0"></td>
+</tr>
+<tr>
+	<td class="work col-0 row-1" style="background-color:;">2, URIからPathを取得</td>
+	<td class="arrow col-1 row-1" style="">==[Write(Path)-]=></td>
+	<td class="work col-2 row-1" style="background-color:;">3, types.PageInfoをPathで初期化</td>
+	<td id="wflow-2" class="empty arrow col-3 row-1"></td>
+	<td id="wflow-2" class="empty work col-4 row-1"></td>
+	<td id="wflow-2" class="empty arrow col-5 row-1"></td>
+	<td id="wflow-2" class="empty work col-6 row-1"></td>
+</tr>
+<tr>
+	<td id="wflow-3" class="empty work left col-0 row-2"></td>
+	<td id="wflow-3" class="empty arrow left col-1 row-2"></td>
+	<td class="work col-2 row-2" style="background-color:;">4, types.TplDataをPageInfoとDefTplDataで初期化</td>
+	<td id="wflow-3" class="empty arrow col-3 row-2"></td>
+	<td id="wflow-3" class="empty work col-4 row-2"></td>
+	<td id="wflow-3" class="empty arrow col-5 row-2"></td>
+	<td id="wflow-3" class="empty work col-6 row-2"></td>
+</tr>
+<tr>
+	<td id="wflow-4" class="empty work left col-0 row-3"></td>
+	<td id="wflow-4" class="empty arrow left col-1 row-3"></td>
+	<td class="work col-2 row-3" style="background-color:;">5, Method.Exec(TplData, PageInfo)-</td>
+	<td class="arrow col-3 row-3" style="">==></td>
+	<td class="arrow col-4 row-3" style="border-top:1px solid black; border-bottom:1px solid black;">==></td>
+	<td class="arrow col-5 row-3" style="">==></td>
+	<td class="work col-6 row-3" style="background-color:;">↓</td>
+</tr>
+<tr>
+	<td id="wflow-5" class="empty work left col-0 row-4"></td>
+	<td id="wflow-5" class="empty arrow left col-1 row-4"></td>
+	<td id="wflow-5" class="empty work left col-2 row-4"></td>
+	<td id="wflow-5" class="empty arrow left col-3 row-4"></td>
+	<td id="wflow-5" class="empty work left col-4 row-4"></td>
+	<td id="wflow-5" class="empty arrow left col-5 row-4"></td>
+	<td class="work col-6 row-4" style="background-color:;">↓</td>
+</tr>
+<tr>
+	<td class="work col-0 row-5" style="background-color:;">8, 必要であればリダイレクト</td>
+	<td class="arrow col-1 row-5" style=""><==</td>
+	<td class="arrow col-2 row-5" style="border-top:1px solid black; border-bottom:1px solid black;"><=[redirect]==</td>
+	<td class="arrow col-3 row-5" style=""><==</td>
+	<td class="work col-4 row-5" style="background-color:;">7, TplDataを利用してテンプレートを実行</td>
+	<td class="arrow col-5 row-5" style=""><==</td>
+	<td class="work col-6 row-5" style="background-color:;">6, types.TplDataにデータを書き込む</td>
+</tr>
+</table>

@@ -3,14 +3,14 @@ package types
 import "errors"
 
 // コンテンツの定義
-type Contents struct {
+type App struct {
 	Name     string
 	Before   Method
 	After    Method
 	Contents map[string]*Content
 }
 
-func (cs *Contents) Init(name string, ContentList map[string]ContentIfc) {
+func (cs *App) Init(name string, ContentList map[string]ContentIfc) {
 	cs.Name = name
 	cs.Contents = map[string]*Content{}
 	for key, val := range ContentList {
@@ -20,22 +20,22 @@ func (cs *Contents) Init(name string, ContentList map[string]ContentIfc) {
 	}
 }
 
-func (cs Contents) SetContent(key string, c *Content) {
+func (cs App) SetContent(key string, c *Content) {
 	cs.Contents[key] = c
 }
 
 // 指定された関数を実行する
-func (cs Contents) Exec(info *PageInfo) (*Redirect, error) {
-	if red, _ := cs.Before.Exec(info); red != nil {
+func (cs App) Exec(tpl *TplData, info PageInfo) (*Redirect, error) {
+	if red, _ := cs.Before.Exec(tpl, info); red != nil {
 		return red, nil
 	}
 	con, ok := cs.Contents[info.Contents]
 	if !ok {
 		return nil, errors.New(info.Contents + ":コンテンツは定義されていません")
 	}
-	if red, err := con.Exec(info); red != nil || err != nil {
+	if red, err := con.Exec(tpl, info); red != nil || err != nil {
 		return red, err
 	}
-	red, _ := cs.After.Exec(info)
+	red, _ := cs.After.Exec(tpl, info)
 	return red, nil
 }

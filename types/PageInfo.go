@@ -14,6 +14,7 @@ type PageInfo struct {
 	Method   string // dev/contents/*/page/X/X.go.Method
 }
 
+// 初期化処理
 func (info *PageInfo) Init(contents, packageName, method string) {
 	*info = PageInfo{
 		Contents: contents,

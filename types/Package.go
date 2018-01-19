@@ -3,6 +3,7 @@ package types
 import (
 	"errors"
 	"fmt"
+
 	"os"
 )
 
@@ -31,10 +32,9 @@ func (ms *Package) SetMethod(key string, m Method) {
 	ms.Methods[key] = m
 }
 
-func (pack *Package) Exec(info *PageInfo) (*Redirect, error) {
-	fmt.Println(pack)
+func (pack *Package) Exec(tpl *TplData, info PageInfo) (*Redirect, error) {
 	// 前置処理
-	if red, _ := pack.Before.Exec(info); red != nil {
+	if red, _ := pack.Before.Exec(tpl, info); red != nil {
 		return red, nil
 	}
 	// 実行
@@ -42,10 +42,10 @@ func (pack *Package) Exec(info *PageInfo) (*Redirect, error) {
 	if !ok {
 		return nil, errors.New(info.Method + ":メソッドは定義されていません")
 	}
-	if red, err := method.Exec(info); red != nil {
+	if red, err := method.Exec(tpl, info); red != nil {
 		return red, err
 	}
 	// 後置処理
-	red, _ := pack.After.Exec(info)
+	red, _ := pack.After.Exec(tpl, info)
 	return red, nil
 }

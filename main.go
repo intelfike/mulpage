@@ -7,39 +7,35 @@ import (
 	"flag"
 	"fmt"
 	"net/http"
-	"strings"
 
+	isear "github.com/intelfike/mulpage/contents/isear/page"
+	"github.com/intelfike/mulpage/global"
 	httpio "github.com/intelfike/mulpage/io/http"
-	htmlproc "github.com/intelfike/mulpage/proc/policy/html"
-	pathpol "github.com/intelfike/mulpage/proc/policy/path"
+	"github.com/intelfike/mulpage/policy"
+	htmlproc "github.com/intelfike/mulpage/policy/html"
+	"github.com/intelfike/mulpage/types"
 )
 
 var port = flag.String("http", ":80", "HTTP port number.")
 
-func init() {
+func init() { // コンテンツのリストを定義
 	flag.Parse()
 
+	// コンテンツリストを定義
+	var ContentList = map[string]types.ContentIfc{
+		"isear": &isear.Content{},
+	}
+	// グローバル変数の設定
+	global.App.Init("mulpage", ContentList)
+
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		// パスを取得
-		path := httpio.ReadPath(r)
-		// パスをアプリケーション向けに変換
-		path = pathpol.ParseURIPath(path)
-		if len(path) == 0 || !strings.HasPrefix(path[0], "_") {
-			err := httpio.WriteFile(w, "public"+r.URL.Path)
-			if err == nil {
-				// ファイルが見つからない場合の処理
-				return
-			}
-			return
-		}
-		if len(path) == 1 {
-			http.Redirect(w, r, path[0], 307)
+		info, err := policy.CreatePageInfo(r)
+		if err != nil {
+			httpio.WriteFile(w, "public"+r.URL.Path)
 			return
 		}
 		// HTMLを生成して送信
-		contents := httpio.ReadContents(r)
-		PackageName := pathpol.AvailePackageName(path[0])
-		redirect, err := htmlproc.Write(w, contents, PackageName, path[1])
+		redirect, err := htmlproc.Write(w, info)
 		if err != nil {
 			result := "エラー:" + fmt.Sprint(err) + "\n"
 			result += "エラーメッセージを記録して管理者に報告してください。"

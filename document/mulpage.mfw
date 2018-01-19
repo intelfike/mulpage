@@ -1,0 +1,43 @@
+=== 起動時 === [main] [page] [top]
+Define内で定義するデータは別に方を用意して、先頭にDef(Default)をつけるようにする
+デフォルトデータを、必要があればMethod.Exec時点で上書き用変数に書き込むことで上書きする
+---
+[main]
+init開始
+リスナーを定義
+global.DefTplDataを初期化
+global.DefPageInfo
+types.App を初期化
+
+[page] CONTENT.Content.Define()
+types.Content を初期化
+
+[top] PACKAGE.Package.Define()
+types.Package を初期化
+types.Package.SetMethod()で関数を定義
+
+[main]
+リッスン開始
+
+
+
+=== リクエストごと === [main] [html] [html/template] [Method]
+こちらで定義する情報は、受信はPageInfo、テンプレート応答はTplDataで行う
+---
+[main]
+リクエスト内容を解釈
+URIからPathを取得
+
+[html] Write(Path)-
+types.PageInfoをPathで初期化
+types.TplDataをPageInfoとDefTplDataで初期化
+Method.Exec(TplData, PageInfo)-
+
+[Method]
+	types.TplDataにデータを書き込む
+
+[html/template] 
+TplDataを利用してテンプレートを実行
+
+[main] redirect
+必要であればリダイレクト
