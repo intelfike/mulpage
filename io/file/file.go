@@ -1,3 +1,4 @@
+// 末端パッケージ
 package file
 
 import (

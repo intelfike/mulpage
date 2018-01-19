@@ -1,4 +1,4 @@
-// "github.com/intelfike/mulpage/dev/io/http"
+// 末端パッケージ
 package httpio
 
 import (

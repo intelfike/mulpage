@@ -4,8 +4,12 @@
 package types
 
 import (
+	"errors"
+	"net/http"
 	"path/filepath"
 	"strings"
+
+	httpio "github.com/intelfike/mulpage/io/http"
 )
 
 type PageInfo struct {
@@ -15,12 +19,22 @@ type PageInfo struct {
 }
 
 // 初期化処理
-func (info *PageInfo) Init(contents, packageName, method string) {
-	*info = PageInfo{
-		Contents: contents,
-		Package:  packageName,
-		Method:   method,
+func (info *PageInfo) Init(r *http.Request) error {
+	*info = PageInfo{"homepage", "top", "Index"} // デフォルト値
+	// パスを取得
+	path := httpio.ReadPath(r)
+	if path != nil && !strings.HasPrefix(path[0], "_") {
+		return errors.New("Method呼び出しではありません")
 	}
+	// ページ情報を定義
+	info.Contents = httpio.ReadContents(r)
+	if len(path) >= 1 {
+		info.Package = strings.TrimPrefix(path[0], "_")
+	}
+	if len(path) >= 2 {
+		info.Method = path[1]
+	}
+	return nil
 }
 
 // ピリオド区切りでメソッド名のフルパスを表示

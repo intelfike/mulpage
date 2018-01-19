@@ -11,7 +11,6 @@ import (
 	isear "github.com/intelfike/mulpage/contents/isear/page"
 	"github.com/intelfike/mulpage/global"
 	httpio "github.com/intelfike/mulpage/io/http"
-	"github.com/intelfike/mulpage/policy"
 	htmlproc "github.com/intelfike/mulpage/policy/html"
 	"github.com/intelfike/mulpage/types"
 )
@@ -29,7 +28,8 @@ func init() { // コンテンツのリストを定義
 	global.App.Init("mulpage", ContentList)
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		info, err := policy.CreatePageInfo(r)
+		info := types.PageInfo{}
+		err := info.Init(r)
 		if err != nil {
 			httpio.WriteFile(w, "public"+r.URL.Path)
 			return
