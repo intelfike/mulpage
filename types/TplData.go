@@ -23,10 +23,9 @@ func (rd *TplData) Init() {
 	}
 }
 
+// init以降のイニシャライザ
 func (rd *TplData) SetPageInfo(info PageInfo) {
-	if len(info.Method) != 0 {
-		rd.Template = info.Method
-	}
+	rd.Template = info.Method
 	rd.Assign("Title", info.Package+" | "+info.Contents)
 }
 

@@ -4,7 +4,6 @@ import (
 	"github.com/intelfike/mulpage/contents/isear/page/support"
 	"github.com/intelfike/mulpage/contents/isear/page/top"
 	"github.com/intelfike/mulpage/contents/isear/page/usage"
-	"github.com/intelfike/mulpage/global"
 	"github.com/intelfike/mulpage/types"
 )
 
@@ -18,5 +17,9 @@ func (c *Content) Define(content *types.Content) {
 		"usage":   &usage.Package{},
 	}
 	content.Init("isear", PackageList)
-	global.DefTplData.Assign("Packages", content.Packages)
+
+	// content.Before = func(tpl *types.TplData, info types.PageInfo) *types.Redirect {
+
+	// 	return nil
+	// }
 }
