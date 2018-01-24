@@ -2,8 +2,8 @@
 <html lang="ja">
 <head>
 	<meta charset="UTF-8">
-	<title>{{.Title}} | isear</title>
-	<link rel="stylesheet" href="/css/default.css?_={{.Rand}}">
+	<title>{{ .Title }} | isear</title>
+	<link rel="stylesheet" href="/css/default.css?_={{ .Rand }}">
 </head>
 <body>
 
@@ -13,18 +13,29 @@
 	</a>
 </header>
 
+<h2>
+{{ if eq .Info.Method "Index" }}
+	{{ .Package.Name }}
+{{ else }}
+	<a href="/_{{ .Info.Package }}">{{ .Package.Name }}</a>&gt;{{ .Title }}
+{{ end }}
+</h2>
+
 
 <div id="middle">
 	<nav>
 		<ul>
-			<li><a href="/_top/">トップページ</a></li>
-			<li><a href="/_usage/">isearの使い方</a></li>
-			<li><a href="/_support/">サポート情報</a></li>
+{{ range .Packages }}
+	{{ if eq $.Info.Package .Package }}
+			<li>{{ .Text }}</li>
+	{{ else }}
+			<li><a href="/_{{ .Package }}/">{{ .Text }}</a></li>
+	{{ end }}
+{{ end }}
 		</ul>
 	</nav>
 	<article>
-		<h2>{{.Title}}</h2>
-{{template "page" .}}
+{{ template "page" . }}
 	</article>
 </div>
 

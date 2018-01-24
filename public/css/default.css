@@ -22,14 +22,13 @@ div#middle {
 }
 
 nav {
-	padding: 16px 0;
+	padding: 16px 16px 42px 0;
 	flex-shrink: 0;
 	display: block;
-	width: 200px;
 	background-color: #ffb;
 }
 nav ul li {
-	margin: 16px 0;
+	margin-bottom: 16px;
 }
 
 article {
@@ -39,8 +38,21 @@ article {
 	background-color: #fff;
 	padding: 16px;
 }
+h2 {
+	padding-left: 32px;
+	background-image: url("/favicon.ico");
+	background-repeat: no-repeat;
+}
+ul li , ol li{
+	margin-bottom: 8px;
+}
 
 footer{
 	background-color: #DDD;
 	padding: 8px;
+}
+
+h3 {
+	border-bottom: 1px solid black;
+	padding: 2px;
 }

@@ -1,3 +1,3 @@
-{{define "page"}}
+{{ define "page" }}
 
-{{end}}
+{{ end }}
