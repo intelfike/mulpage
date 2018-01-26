@@ -6,10 +6,20 @@ import (
 	"io"
 	"strconv"
 
+	isear "github.com/intelfike/mulpage/contents/isear/page"
 	"github.com/intelfike/mulpage/global"
 	"github.com/intelfike/mulpage/module/rand"
 	"github.com/intelfike/mulpage/types"
 )
+
+func init() {
+	// コンテンツリストを定義
+	var ContentList = map[string]types.ContentIfc{
+		"isear": &isear.Content{},
+	}
+	// グローバル変数の設定
+	global.App.Init("mulpage", ContentList)
+}
 
 // テンプレートをHTMLに変換して取得する
 func Genelate(info types.PageInfo) (string, *types.Redirect, error) {
