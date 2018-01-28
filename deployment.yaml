@@ -1,0 +1,20 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: mulpage
+spec:
+  strategy:
+    type: RollingUpdate
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: mulpage
+    spec: 
+      containers:
+      - name: mulpage
+        image: asia.gcr.io/intelfike-428ac/mulpage:1.3
+        command:
+          - ./mulpage
+        ports:
+          - containerPort: 80

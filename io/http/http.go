@@ -28,7 +28,6 @@ func ReadPath(r *http.Request) []string {
 // ドメインの一番左側を取得する
 func ReadContents(r *http.Request) string {
 	host := strings.Split(r.Host, ".")
-	host[0] = "isear"
 	return host[0]
 }
 
