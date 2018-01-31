@@ -15,7 +15,6 @@ func (p *Package) Define(pack *types.Package) {
 	})
 
 	pack.SetMethod("Functions", func(tpl *types.TplData, info types.PageInfo) *types.Redirect {
-		tpl.Assign("Title", "機能")
 		return nil
 	})
 

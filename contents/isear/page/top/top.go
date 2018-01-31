@@ -18,10 +18,4 @@ func (p *Package) Define(pack *types.Package) {
 		tpl.Assign("mod", "Index")
 		return nil
 	})
-
-	pack.SetMethod("New", func(tpl *types.TplData, info types.PageInfo) *types.Redirect {
-		tpl.Template = "Index"
-		tpl.Assign("mod", "New")
-		return nil
-	})
 }

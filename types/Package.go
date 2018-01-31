@@ -1,7 +1,6 @@
 package types
 
 import (
-	"errors"
 	"fmt"
 
 	"os"
@@ -29,6 +28,9 @@ func (ms *Package) SetMethod(key string, m Method) {
 		fmt.Println("types.Packageは必ずInit()してください\n例: pack.Init()")
 		os.Exit(1)
 	}
+	if _, ok := ms.Methods[key]; ok {
+		fmt.Println(key, ":メソッドは既に定義されています。")
+	}
 	ms.Methods[key] = m
 }
 
@@ -40,7 +42,7 @@ func (pack *Package) Exec(tpl *TplData, info PageInfo) (*Redirect, error) {
 	// 実行
 	method, ok := pack.Methods[info.Method]
 	if !ok {
-		return nil, errors.New(info.Method + ":メソッドは定義されていません")
+		return nil, nil
 	}
 	if red, err := method.Exec(tpl, info); red != nil {
 		return red, err

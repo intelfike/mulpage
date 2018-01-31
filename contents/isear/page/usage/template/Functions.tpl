@@ -1,3 +1,4 @@
+{{ define "title" }}機能{{ end }}
 {{ define "page" }}
 
 <img src="/data/image/アイコン2.png" height="200"><br>
