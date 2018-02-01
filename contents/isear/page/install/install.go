@@ -7,10 +7,9 @@ import (
 type Package struct{}
 
 func (p *Package) Define(pack *types.Package) {
-	pack.Init("インストール")
+	pack.Init("package", "インストール")
 
-	pack.SetMethod("Index", func(tpl *types.TplData, info types.PageInfo) *types.Redirect {
-		tpl.Assign("Title", "インストール")
+	pack.SetMethod("Index", "インストール", func(tpl *types.TplData, info types.PageInfo) *types.Redirect {
 		return nil
 	})
 }

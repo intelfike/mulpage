@@ -7,24 +7,21 @@ import (
 type Package struct{}
 
 func (p *Package) Define(pack *types.Package) {
-	pack.Init("isearの使い方")
+	pack.Init("package", "isearの使い方")
 
-	pack.SetMethod("Index", func(tpl *types.TplData, info types.PageInfo) *types.Redirect {
-		tpl.Assign("Title", "目次")
+	pack.SetMethod("Index", "目次", func(tpl *types.TplData, info types.PageInfo) *types.Redirect {
 		return nil
 	})
 
-	pack.SetMethod("Functions", func(tpl *types.TplData, info types.PageInfo) *types.Redirect {
+	pack.SetMethod("Functions", "機能", func(tpl *types.TplData, info types.PageInfo) *types.Redirect {
 		return nil
 	})
 
-	pack.SetMethod("Name", func(tpl *types.TplData, info types.PageInfo) *types.Redirect {
-		tpl.Assign("Title", "名称・用語")
+	pack.SetMethod("Name", "名称・用語", func(tpl *types.TplData, info types.PageInfo) *types.Redirect {
 		return nil
 	})
 
-	pack.SetMethod("SKey", func(tpl *types.TplData, info types.PageInfo) *types.Redirect {
-		tpl.Assign("Title", "ショートカットキー")
+	pack.SetMethod("SKey", "ショートカットキー", func(tpl *types.TplData, info types.PageInfo) *types.Redirect {
 		return nil
 	})
 }

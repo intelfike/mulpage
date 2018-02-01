@@ -14,3 +14,14 @@ func (m Method) Exec(tpl *TplData, info PageInfo) (*Redirect, error) {
 	}
 	return m(tpl, info), nil
 }
+
+type Article struct {
+	Index  int
+	Key    string
+	Name   string
+	Method Method
+}
+
+func (a *Article) Exec(tpl *TplData, info PageInfo) (*Redirect, error) {
+	return a.Method.Exec(tpl, info)
+}

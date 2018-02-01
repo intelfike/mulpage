@@ -14,11 +14,10 @@ import (
 
 func init() {
 	// コンテンツリストを定義
-	var ContentList = map[string]types.ContentIfc{
-		"isear": &isear.Content{},
-	}
-	// グローバル変数の設定
-	global.App.Init("mulpage", ContentList)
+	global.App.Init("app", "mulpage")
+
+	isearCon := global.App.NewChild("isear")
+	isearCon.FallDown(&isear.Content{})
 }
 
 // テンプレートをHTMLに変換して取得する

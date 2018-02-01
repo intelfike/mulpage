@@ -25,11 +25,23 @@
 <div id="middle">
 	<nav>
 		<ul>
-{{ range .Packages }}
-	{{ if eq $.Info.Package .Package }}
-			<li>{{ .Text }}</li>
+{{ range $pack := .Packages }}
+	{{ if eq $.Info.Package .Key }}
+			<li>{{ .Name }}</li>
 	{{ else }}
-			<li><a href="/_{{ .Package }}/">{{ .Text }}</a></li>
+			<li><a href="/_{{ .Key }}/">{{ .Name }}</a></li>
+	{{ end }}
+
+	{{ if ne (len .Articles) 1 }}
+			<ul>
+		{{ range $atc := .ArticlesArray }}
+			{{ if and (eq $.Info.Package $pack.Key) (eq $.Info.Method .Key) }}
+				<li>{{ .Name }}</li>
+			{{ else }}
+				<li><a href="/_{{ $pack.Key }}/{{ .Key }}/">{{ .Name }}</a></li>
+			{{ end }}
+		{{ end }}
+			</ul>
 	{{ end }}
 {{ end }}
 		</ul>
