@@ -34,4 +34,9 @@ func (c *Content) Define(con *types.Package) {
 		tpl.Assign("Info", info)
 		return nil
 	}
+
+	con.After = func(tpl *types.TplData, info types.PageInfo) *types.Redirect {
+		tpl.Assign("Template", tpl.Template)
+		return nil
+	}
 }

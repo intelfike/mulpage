@@ -9,9 +9,12 @@ type Package struct{}
 func (p *Package) Define(pack *types.Package) {
 	pack.Init("package", "isearの使い方")
 
-	pack.SetMethod("Index", "目次", func(tpl *types.TplData, info types.PageInfo) *types.Redirect {
+	pack.Before = func(tpl *types.TplData, info types.PageInfo) *types.Redirect {
+		if tpl.Template == "Index" {
+			tpl.Template = "Functions"
+		}
 		return nil
-	})
+	}
 
 	pack.SetMethod("Functions", "機能", func(tpl *types.TplData, info types.PageInfo) *types.Redirect {
 		return nil

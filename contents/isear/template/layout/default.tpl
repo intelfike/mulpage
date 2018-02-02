@@ -35,7 +35,7 @@
 	{{ if ne (len .Articles) 1 }}
 			<ul>
 		{{ range $atc := .ArticlesArray }}
-			{{ if and (eq $.Info.Package $pack.Key) (eq $.Info.Method .Key) }}
+			{{ if and (eq $.Info.Package $pack.Key) (eq $.Template .Key) }}
 				<li>{{ .Name }}</li>
 			{{ else }}
 				<li><a href="/_{{ $pack.Key }}/{{ .Key }}/">{{ .Name }}</a></li>
