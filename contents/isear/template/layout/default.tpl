@@ -14,10 +14,9 @@
 </header>
 
 <h2>
-{{ if eq .Info.Method "Index" }}
-	{{ .Package.Name }}
-{{ else }}
-	<a href="/_{{ .Info.Package }}">{{ .Package.Name }}</a>&gt;{{ .Title }}
+{{ .Package.Name }}
+{{ if ne .Info.Method "Index" }}
+	&gt;{{ .Title }}
 {{ end }}
 </h2>
 
@@ -35,10 +34,12 @@
 	{{ if ne (len .Articles) 1 }}
 			<ul>
 		{{ range $atc := .ArticlesArray }}
-			{{ if and (eq $.Info.Package $pack.Key) (eq $.Template .Key) }}
-				<li>{{ .Name }}</li>
-			{{ else }}
-				<li><a href="/_{{ $pack.Key }}/{{ .Key }}/">{{ .Name }}</a></li>
+			{{ if ne .Name "" }}
+				{{ if and (eq $.Info.Package $pack.Key) (eq $.Template .Key) }}
+					<li>{{ .Name }}</li>
+				{{ else }}
+					<li><a href="/_{{ $pack.Key }}/{{ .Key }}/">{{ .Name }}</a></li>
+				{{ end }}
 			{{ end }}
 		{{ end }}
 			</ul>

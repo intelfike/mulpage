@@ -6,9 +6,9 @@ import (
 	"io"
 	"strconv"
 
+	"github.com/intelfike/module/rand"
 	isear "github.com/intelfike/mulpage/contents/isear/page"
 	"github.com/intelfike/mulpage/global"
-	"github.com/intelfike/mulpage/module/rand"
 	"github.com/intelfike/mulpage/types"
 )
 
@@ -21,6 +21,7 @@ func init() {
 }
 
 // テンプレートをHTMLに変換して取得する
+// いらない
 func Genelate(info types.PageInfo) (string, *types.Redirect, error) {
 	b := new(bytes.Buffer)
 	redirect, err := Write(b, info)
@@ -47,6 +48,8 @@ func Write(w io.Writer, info types.PageInfo) (*types.Redirect, error) {
 	if err != nil {
 		return redirect, err
 	}
-	err = tplfiles.Execute(w, tpl.AssignData)
+	if redirect == nil {
+		err = tplfiles.Execute(w, tpl.AssignData)
+	}
 	return redirect, err
 }

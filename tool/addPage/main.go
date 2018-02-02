@@ -7,7 +7,7 @@ import (
 	"os"
 	"path/filepath"
 
-	filemod "github.com/intelfike/mulpage/module/file"
+	filemod "github.com/intelfike/module/file"
 )
 
 func main() {
