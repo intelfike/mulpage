@@ -8,6 +8,7 @@ import (
 
 	"github.com/intelfike/module/rand"
 	isear "github.com/intelfike/mulpage/contents/isear/page"
+	www "github.com/intelfike/mulpage/contents/www/page"
 	"github.com/intelfike/mulpage/global"
 	"github.com/intelfike/mulpage/types"
 )
@@ -15,6 +16,9 @@ import (
 func init() {
 	// コンテンツリストを定義
 	global.App.Init("app", "mulpage")
+
+	wwwCon := global.App.NewChild("www")
+	wwwCon.FallDown(&www.Content{})
 
 	isearCon := global.App.NewChild("isear")
 	isearCon.FallDown(&isear.Content{})
@@ -37,7 +41,7 @@ func Write(w io.Writer, info types.PageInfo) (*types.Redirect, error) {
 
 	// 関数実行
 	redirect, err := global.App.Exec(tpl, info)
-	if err != nil {
+	if redirect != nil || err != nil {
 		return redirect, err
 	}
 
@@ -48,8 +52,6 @@ func Write(w io.Writer, info types.PageInfo) (*types.Redirect, error) {
 	if err != nil {
 		return redirect, err
 	}
-	if redirect == nil {
-		err = tplfiles.Execute(w, tpl.AssignData)
-	}
+	err = tplfiles.Execute(w, tpl.AssignData)
 	return redirect, err
 }

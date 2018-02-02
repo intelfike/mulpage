@@ -14,7 +14,7 @@ func (p *Package) Define(pack *types.Package) {
 	}
 
 	pack.SetMethod("Index", "", func(tpl *types.TplData, info types.PageInfo) *types.Redirect {
-		return &types.Redirect{"/_usage/Functions", 307}
+		return &types.Redirect{"/_usage/Functions", 301}
 	})
 
 	pack.SetMethod("Functions", "機能", func(tpl *types.TplData, info types.PageInfo) *types.Redirect {

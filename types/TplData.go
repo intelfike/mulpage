@@ -25,7 +25,7 @@ func (rd *TplData) Init() {
 
 // init以降のイニシャライザ
 func (rd *TplData) SetPageInfo(info PageInfo) {
-	rd.Template = info.Method
+	rd.Template = info.Article
 	rd.Assign("Title", info.Package+" | "+info.Contents)
 }
 

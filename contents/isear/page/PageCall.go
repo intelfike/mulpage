@@ -28,8 +28,10 @@ func (c *Content) Define(con *types.Package) {
 	con.Before = func(tpl *types.TplData, info types.PageInfo) *types.Redirect {
 		tpl.Assign("Packages", con.ChildrenArray())
 		tpl.Assign("Package", con.Children[info.Package])
-		if v, ok := con.Children[info.Package].Articles[info.Method]; ok {
-			tpl.Assign("Title", v.Name)
+		if v, ok := con.Children[info.Package]; ok {
+			if v1, ok1 := v.Articles[info.Article]; ok1 {
+				tpl.Assign("Title", v1.Name)
+			}
 		}
 		tpl.Assign("Info", info)
 		return nil

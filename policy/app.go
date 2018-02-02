@@ -3,6 +3,7 @@ package policy
 import (
 	"fmt"
 	"net/http"
+	"path/filepath"
 
 	httpio "github.com/intelfike/mulpage/io/http"
 	htmlproc "github.com/intelfike/mulpage/policy/html"
@@ -11,9 +12,10 @@ import (
 
 func Listener(w http.ResponseWriter, r *http.Request) {
 	info := types.PageInfo{}
-	err := info.Init(r)
-	if err != nil {
-		httpio.WriteFile(w, "public"+r.URL.Path)
+	if err := info.Init(r); err != nil {
+		if err = httpio.WriteFile(w, filepath.Join("contents", info.Contents, "public", r.URL.Path)); err != nil {
+			httpio.WriteFile(w, "public"+r.URL.Path)
+		}
 		return
 	}
 	// HTMLを生成して送信

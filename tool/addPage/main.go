@@ -66,7 +66,7 @@ func main() {
 			continue
 		}
 		defer fgo.Close()
-		tplfiles, err := template.ParseFiles("template/tpl.go")
+		tplfiles, err := template.ParseFiles("template/go.tpl")
 		if err != nil {
 			fmt.Println(err)
 			continue

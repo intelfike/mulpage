@@ -13,14 +13,6 @@
 	</a>
 </header>
 
-<h2>
-{{ .Package.Name }}
-{{ if ne .Info.Method "Index" }}
-	&gt;{{ .Title }}
-{{ end }}
-</h2>
-
-
 <div id="middle">
 	<nav>
 		<ul>
@@ -48,6 +40,12 @@
 		</ul>
 	</nav>
 	<article>
+		<h2>
+{{ .Package.Name }}
+{{ if ne .Info.Article "Index" }}
+	&gt;{{ .Title }}
+{{ end }}
+</h2>
 {{ template "page" . }}
 	</article>
 </div>
