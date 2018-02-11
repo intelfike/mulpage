@@ -3,6 +3,7 @@ package page
 import (
 	"github.com/intelfike/mulpage/contents/isear/page/install"
 	"github.com/intelfike/mulpage/contents/isear/page/support"
+	"github.com/intelfike/mulpage/contents/isear/page/thanks"
 	"github.com/intelfike/mulpage/contents/isear/page/top"
 	"github.com/intelfike/mulpage/contents/isear/page/usage"
 	"github.com/intelfike/mulpage/types"
@@ -25,7 +26,11 @@ func (c *Content) Define(con *types.Package) {
 	installPack := con.NewChild("install")
 	installPack.FallDown(&install.Package{})
 
+	thanksPack := con.NewChild("thanks")
+	thanksPack.FallDown(&thanks.Package{})
+
 	con.Before = func(tpl *types.TplData, info types.PageInfo) *types.Redirect {
+		// ページに必要な情報を渡す
 		tpl.Assign("Packages", con.ChildrenArray())
 		tpl.Assign("Package", con.Children[info.Package])
 		if v, ok := con.Children[info.Package]; ok {
