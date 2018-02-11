@@ -13,7 +13,7 @@ spec:
     spec: 
       containers:
       - name: mulpage
-        image: asia.gcr.io/intelfike-428ac/mulpage:1.8
+        image: asia.gcr.io/intelfike-428ac/mulpage:1.9
         command:
           - ./mulpage
         ports:
