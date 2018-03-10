@@ -7,22 +7,9 @@ import (
 	"strconv"
 
 	"github.com/intelfike/module/rand"
-	isear "github.com/intelfike/mulpage/contents/isear/page"
-	www "github.com/intelfike/mulpage/contents/www/page"
 	"github.com/intelfike/mulpage/global"
 	"github.com/intelfike/mulpage/types"
 )
-
-func init() {
-	// コンテンツリストを定義
-	global.App.Init("app", "mulpage")
-
-	wwwCon := global.App.NewChild("www")
-	wwwCon.FallDown(&www.Content{})
-
-	isearCon := global.App.NewChild("isear")
-	isearCon.FallDown(&isear.Content{})
-}
 
 // テンプレートをHTMLに変換して取得する
 // いらない
@@ -45,8 +32,6 @@ func Write(w io.Writer, info types.PageInfo) (*types.Redirect, error) {
 		return redirect, err
 	}
 
-	// テンプレート追加はPackage.Exec後
-	tpl.AddTpl(tpl.LayoutPath(info), tpl.PageTemplatePath(info))
 	// テンプレート実行
 	tplfiles, err := template.ParseFiles(tpl.TemplateFiles...)
 	if err != nil {

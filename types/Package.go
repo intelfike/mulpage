@@ -9,23 +9,23 @@ import (
 
 // パッケージの定義
 type Package struct {
-	Index    int
-	Key      string
-	depth    int
-	Kind     string
-	Name     string
-	Before   Method
-	After    Method
-	Children map[string]*Package
-	Articles map[string]*Article
+	Depth     int
+	Index     int
+	Key       string
+	Kind      string
+	ChildKind string
+	Name      string
+	Before    Method
+	After     Method
+	Children  map[string]*Package
+	Articles  map[string]*Article
 }
 
 type PackageIfc interface {
 	Define(*Package)
 }
 
-func (pack *Package) Init(kind, name string) {
-	pack.Kind = kind
+func (pack *Package) Init(name string) {
 	pack.Name = name
 	pack.Children = map[string]*Package{}
 	pack.Articles = map[string]*Article{}
@@ -51,7 +51,10 @@ func (pack *Package) SetChild(key string, child *Package) {
 
 	child.Index = len(pack.Children)
 	child.Key = key
-	child.depth = pack.depth + 1
+	child.Depth = pack.Depth + 1
+	if pack.ChildKind != "" {
+		child.Kind = pack.ChildKind
+	}
 	pack.Children[key] = child
 }
 func (pack *Package) SetMethod(key, name string, m Method) {
@@ -66,15 +69,17 @@ func (pack *Package) SetMethod(key, name string, m Method) {
 	pack.Articles[key] = atc
 }
 
+// リクエストに対してプログラムを実行する
+// Beforeでリダイレクト→即座にリダイレクトするかどうか
 func (pack *Package) Exec(tpl *TplData, info PageInfo) (*Redirect, error) {
-	if len(info.ExecPath) <= pack.depth {
+	if len(info.ExecPath) <= pack.Depth {
 		return nil, errors.New("パスが長すぎます")
 	}
 	// 前置処理
 	if red, _ := pack.Before.Exec(tpl, info); red != nil {
 		return red, nil
 	}
-	key := info.ExecPath[pack.depth]
+	key := info.ExecPath[pack.Depth]
 	// 実行
 	atc, ok := pack.Articles[key]
 	if !ok {
