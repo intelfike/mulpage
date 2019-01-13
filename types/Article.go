@@ -1,3 +1,5 @@
+// 実行可能な構造体定義
+// types.Packageに含まれる
 package types
 
 import (
@@ -15,6 +17,7 @@ func (m Method) Exec(tpl *TplData, info PageInfo) (*Redirect, error) {
 	return m(tpl, info), nil
 }
 
+// メソッドのラッパー
 type Article struct {
 	Index  int
 	Key    string

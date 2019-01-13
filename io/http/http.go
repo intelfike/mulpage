@@ -1,4 +1,5 @@
 // 末端パッケージ
+// http関連の入出力を共通化するためのパッケージ
 package httpio
 
 import (
@@ -7,6 +8,7 @@ import (
 	"strings"
 )
 
+// httpボディを読み取り、ボディのリーダーを閉じる
 func ReadBody(r *http.Request) (string, error) {
 	b, err := ioutil.ReadAll(r.Body)
 	defer r.Body.Close()
@@ -30,11 +32,12 @@ func ReadContents(r *http.Request) string {
 	host := strings.Split(r.Host, ".")
 	return host[0]
 }
-
+// 引数の文字列を返す
 func Write(w http.ResponseWriter, s string) error {
 	_, err := w.Write([]byte(s))
 	return err
 }
+// ファイルを読み取り、httpに書き込む
 func WriteFile(w http.ResponseWriter, fileName string) error {
 	b, err := ioutil.ReadFile(fileName)
 	if err != nil {
