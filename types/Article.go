@@ -7,24 +7,24 @@ import (
 )
 
 // メソッドの定義
-type Method func(*TplData, PageInfo) *Redirect
+type Method func(PageInfo, *TplData) *Redirect
 
-func (m Method) Exec(tpl *TplData, info PageInfo) (*Redirect, error) {
+func (m Method) Exec(info PageInfo, tpl *TplData) (*Redirect, error) {
 	if m == nil {
 		fullm := info.FullMethod()
 		return nil, errors.New(fullm + ":メソッドが正しく定義されていません")
 	}
-	return m(tpl, info), nil
+	return m(info, tpl), nil
 }
 
 // メソッドのラッパー
-type Article struct {
+type Page struct {
 	Index  int
 	Key    string
 	Name   string
 	Method Method
 }
 
-func (a *Article) Exec(tpl *TplData, info PageInfo) (*Redirect, error) {
-	return a.Method.Exec(tpl, info)
+func (a *Page) Exec(info PageInfo, tpl *TplData) (*Redirect, error) {
+	return a.Method.Exec(info, tpl)
 }

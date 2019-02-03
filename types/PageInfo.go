@@ -14,8 +14,8 @@ import (
 
 type PageInfo struct {
 	Contents string // dev/contents/*
-	Package  string // dev/contents/*/page/X
-	Article  string // dev/contents/*/page/X/X.go.Function
+	Group    string // dev/contents/*/page/X
+	Page     string // dev/contents/*/page/X/X.go.Function
 	ExecPath []string
 }
 
@@ -24,6 +24,9 @@ func (info *PageInfo) Init(r *http.Request) error {
 	// コンテンツを取得
 	info.ExecPath = []string{"www", "top", "Index"}
 	info.ExecPath[0] = httpio.ReadContents(r)
+	if strings.Contains(info.ExecPath[0], ":") {
+		info.ExecPath[0] = strings.Split(info.ExecPath[0], ":")[0]
+	}
 	info.Contents = info.ExecPath[0]
 	// パスを取得
 	path := httpio.ReadPath(r)
@@ -37,14 +40,14 @@ func (info *PageInfo) Init(r *http.Request) error {
 	if len(path) >= 2 {
 		info.ExecPath[2] = path[1]
 	}
-	info.Package = info.ExecPath[1]
-	info.Article = info.ExecPath[2]
+	info.Group = info.ExecPath[1]
+	info.Page = info.ExecPath[2]
 	return nil
 }
 
 // ピリオド区切りでメソッド名のフルパスを表示
 func (pi *PageInfo) FullMethod() string {
-	return strings.Join([]string{pi.Contents, pi.Package, pi.Article}, ".")
+	return strings.Join([]string{pi.Contents, pi.Group, pi.Page}, ".")
 }
 
 // 相対パスを取得する
@@ -53,6 +56,6 @@ func (pi *PageInfo) ContentsPath() string {
 	return path
 }
 func (pi *PageInfo) PackagePath() string {
-	path := filepath.Join(pi.ContentsPath(), "page", pi.Package)
+	path := filepath.Join(pi.ContentsPath(), "page", pi.Group)
 	return path
 }
