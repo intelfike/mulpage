@@ -21,7 +21,6 @@ func (m Method) Exec(info PageInfo, tpl *TplData) (*Redirect, error) {
 type Page struct {
 	Index  int
 	Key    string
-	Name   string
 	Method Method
 }
 

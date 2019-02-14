@@ -11,32 +11,25 @@ import (
 
 // パッケージの定義
 type Package struct {
-	Depth     int
-	Index     int
-	Key       string
-	Kind      string // 表示用の種別
-	ChildKind string
-	Name      string // 表示用のラベル
-	Before    Method
-	After     Method
-	Children  map[string]Executable
+	Index    int
+	Key      string
+	Before   Method
+	After    Method
+	Children map[string]Executable
 }
 
 type Executable interface {
 	Exec(PageInfo, *TplData) (*Redirect, error)
 }
 
-func NewPackage(name, childKind string) *Package {
+func NewPackage() *Package {
 	pack := new(Package)
-	pack.Init("web")
-	pack.Kind = "root"
-	pack.ChildKind = childKind
+	pack.Init()
 	return pack
 }
 
 // 構造体を初期化する
-func (pack *Package) Init(name string) {
-	pack.Name = name
+func (pack *Package) Init() {
 	pack.Children = map[string]Executable{}
 }
 
@@ -53,18 +46,14 @@ func (pack *Package) FallDown(pis ...Definer) {
 
 // 新しい子パッケージを作成し、追加する
 // SetChildのラッパ
-func (pack *Package) NewChild(key, name string) *Package {
+func (pack *Package) NewChild(key string) *Package {
 	if _, ok := pack.Children[key]; ok {
 		fmt.Println(key, ":重複したキーによる子パッケージは登録できません。\n違う名前で登録してください。")
 		return nil
 	}
-	child := NewPackage(name, "")
+	child := NewPackage()
 	child.Index = len(pack.Children)
 	child.Key = key
-	child.Depth = pack.Depth + 1
-	if pack.ChildKind != "" {
-		child.Kind = pack.ChildKind
-	}
 
 	pack.SetChild(key, child)
 	return child
@@ -76,8 +65,8 @@ func (pack *Package) SetChild(key string, child *Package) {
 }
 
 // 実行可能なメソッドを追加する
-func (pack *Package) SetMethod(key, name string, m Method) {
-	atc := &Page{len(pack.Children), key, name, m}
+func (pack *Package) SetMethod(key string, m Method) {
+	atc := &Page{len(pack.Children), key, m}
 	pack.setExecutable(key, atc)
 }
 
@@ -98,30 +87,46 @@ func (pack *Package) setExecutable(key string, child Executable) {
 // Beforeでリダイレクト→即座にリダイレクトするかどうか
 // 階層が2の場合、Before1 => Before2 => Exec2 => After2 => After1 という順番で実行する
 func (pack *Package) Exec(info PageInfo, tpl *TplData) (*Redirect, error) {
-	if len(info.ExecPath) <= pack.Depth {
+	return pack.exec(info, tpl, "/root", 0)
+}
+func (pack *Package) exec(info PageInfo, tpl *TplData, path string, depth int) (*Redirect, error) {
+	if depth >= 3 {
 		return nil, errors.New("URLのパスが長すぎます")
 	}
 	// 前置処理
 	if red, _ := pack.Before.Exec(info, tpl); red != nil {
 		return red, nil
 	}
-	key := info.ExecPath[pack.Depth]
+	key := ""
+	switch depth {
+	case 0:
+		key = info.Contents
+	case 1:
+		key = info.Group
+	case 2:
+		key = info.Page
+	}
 	// 実行
 	atc, ok := pack.Children[key]
 	if !ok {
-		// 子パッケージへの伝播
-		child, ok := pack.Children[key]
-		if !ok {
-			return nil, errors.New("エラー:" + pack.Kind + "において、" + key + "は定義されていません")
-		}
-		if red, err := child.Exec(info, tpl); red != nil {
+		return nil, errors.New("エラー:" + path + "において、" + key + "は定義されていません")
+	} else {
+		fmt.Println(key, atc)
+	}
+	// 単純な実行
+	switch t := atc.(type) {
+	case *Package:
+		red, err := t.exec(info, tpl, path+"/"+key, depth+1)
+		if red != nil || err != nil {
 			return red, err
 		}
-	} else {
-		if red, err := atc.Exec(info, tpl); red != nil {
+	default:
+		red, err := atc.Exec(info, tpl)
+		if red != nil || err != nil {
 			return red, err
 		}
 	}
+
 	// 後置処理
 	red, _ := pack.After.Exec(info, tpl)
 	return red, nil

@@ -4,7 +4,10 @@ package types
 
 import (
 	"io"
+	"io/ioutil"
 	"path/filepath"
+
+	yaml "gopkg.in/yaml.v2"
 
 	mtpl "github.com/intelfike/mulpage/template"
 )
@@ -23,7 +26,9 @@ type TplData struct {
 	// テンプレートファイルをリクエスト時に追加するため
 	TemplateFiles []string
 	// 主にテンプレートに渡すデータたち
-	AssignData map[string]interface{}
+	assignData map[string]interface{}
+
+	debugPrintText string
 }
 
 func NewTplData() *TplData {
@@ -38,7 +43,7 @@ func (tpl *TplData) Init() {
 		page:          "",
 		parts:         []string{},
 		TemplateFiles: []string{},
-		AssignData:    map[string]interface{}{},
+		assignData:    map[string]interface{}{},
 	}
 }
 
@@ -56,7 +61,7 @@ func (tpl *TplData) AddParts(fileNames ...string) {
 }
 
 func (tpl *TplData) Assign(key string, value interface{}) {
-	tpl.AssignData[key] = value
+	tpl.assignData[key] = value
 }
 
 // テンプレートファイルを追加 プロジェクトルートからのパス
@@ -81,5 +86,53 @@ func (tpl *TplData) Write(w io.Writer) error {
 
 	tpl.AddFiles(layout, page)
 	tpl.AddFiles(tpl.parts...)
-	return mtpl.Write(w, tpl.AssignData, tpl.TemplateFiles...)
+	return mtpl.Write(w, tpl.assignData, tpl.TemplateFiles...)
+}
+
+func (tpl *TplData) DebugPrint(s string) {
+	tpl.debugPrintText += s
+}
+
+func (tpl *TplData) GetDebugPrintText() string {
+	return tpl.debugPrintText
+}
+
+// form.yamlを読み取る
+// data = formから受け取ったkey-valueのデータ
+func (tpl *TplData) LoadFormYaml(data map[string]interface{}, yamlfile string, inheritKeys ...string) error {
+	// ファイルを読み取る
+	// Decoderを使わないのは、あれだから。
+	b, err := ioutil.ReadFile(filepath.Join(tpl.pagePath, yamlfile))
+	if err != nil {
+		return err
+	}
+	// yamlをデコードする
+	form := make(map[string]interface{})
+	err = yaml.Unmarshal(b, &form)
+	if err != nil {
+		return err
+	}
+
+	// データを整形する
+	items := form["items"].(map[interface{}]interface{})
+	for name, i_item := range items {
+		item := i_item.(map[interface{}]interface{})
+		d, ok := data[name.(string)]
+		if !ok {
+			d = item["default"]
+		}
+		item["value"] = d
+		// 引き継ぐキーをアサイン
+		for _, key := range inheritKeys {
+			item[key] = tpl.assignData[key]
+		}
+		// 代入する
+		items[name] = item
+	}
+
+	// TODO: バリデーション機能を作る
+
+	tpl.Assign("FormData", items)
+
+	return nil
 }
