@@ -8,7 +8,6 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/intelfike/ideapouch/policy/jsondb"
 	httpio "github.com/intelfike/mulpage/io/http"
 )
 
@@ -20,8 +19,6 @@ type PageInfo struct {
 	Method   string
 	Data     map[string]string
 	PostData map[string]string
-
-	JsonDB *jsondb.JsonDB
 }
 
 func NewPageInfo(r *http.Request) (PageInfo, error) {
@@ -65,10 +62,6 @@ func (info *PageInfo) Init(r *http.Request) error {
 			info.PostData[key] = r.PostForm.Get(key)
 		}
 	}
-
-	// jsondbを定義
-	info.JsonDB = jsondb.NewJsonDB("contents/ideapouch/data")
-	info.JsonDB.SetIndent("\t")
 
 	return nil
 }

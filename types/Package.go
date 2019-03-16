@@ -33,8 +33,9 @@ func (pack *Package) Init() {
 	pack.Children = map[string]Executable{}
 }
 
+// 親を渡して子を返すメソッド
 type Definer interface {
-	Define(*Package)
+	Define(*Package) *Package
 }
 
 // 子パッケージの定義を実行する
@@ -83,6 +84,14 @@ func (pack *Package) setExecutable(key string, child Executable) {
 	pack.Children[key] = child
 }
 
+func (pack *Package) SetBefore(f Method) {
+	pack.Before = f
+}
+
+func (pack *Package) SetAfter(f Method) {
+	pack.Before = f
+}
+
 // リクエストに対してプログラムを実行する
 // Beforeでリダイレクト→即座にリダイレクトするかどうか
 // 階層が2の場合、Before1 => Before2 => Exec2 => After2 => After1 という順番で実行する
@@ -108,10 +117,9 @@ func (pack *Package) exec(info PageInfo, tpl *TplData, path string, depth int) (
 	}
 	// 実行
 	atc, ok := pack.Children[key]
+	// fmt.Println(key, atc)
 	if !ok {
 		return nil, errors.New("エラー:" + path + "において、" + key + "は定義されていません")
-	} else {
-		fmt.Println(key, atc)
 	}
 	// 単純な実行
 	switch t := atc.(type) {

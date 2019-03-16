@@ -5,6 +5,8 @@ package types
 import (
 	"io"
 	"io/ioutil"
+	"log"
+	"os"
 	"path/filepath"
 
 	yaml "gopkg.in/yaml.v2"
@@ -53,12 +55,6 @@ func (tpl *TplData) SetPage(page string) {
 func (tpl *TplData) SetLayout(layout string) {
 	tpl.layout = layout
 }
-func (tpl *TplData) AddParts(fileNames ...string) {
-	for _, v := range fileNames {
-		name := tpl.partsPath + v
-		tpl.parts = append(tpl.parts, name)
-	}
-}
 
 func (tpl *TplData) Assign(key string, value interface{}) {
 	tpl.assignData[key] = value
@@ -66,7 +62,32 @@ func (tpl *TplData) Assign(key string, value interface{}) {
 
 // テンプレートファイルを追加 プロジェクトルートからのパス
 func (tpl *TplData) AddFiles(fileNames ...string) {
+	for _, v := range fileNames {
+		if _, err := os.Stat(v); err != nil {
+			log.Fatal(err)
+		}
+	}
 	tpl.TemplateFiles = append(tpl.TemplateFiles, fileNames...)
+}
+
+// 指定したパスを起点にファイルを追加する
+func (tpl *TplData) AddFilesWithPath(path string, fileNames ...string) {
+	for _, v := range fileNames {
+		name := filepath.Join(path, v)
+		tpl.AddFiles(name)
+	}
+}
+func (tpl *TplData) AddParts(fileNames ...string) {
+	// チェック
+	for _, v := range fileNames {
+		name := filepath.Join(tpl.partsPath, v)
+		if _, err := os.Stat(name); err != nil {
+			log.Fatal(err)
+		}
+	}
+
+	// 追加
+	tpl.parts = append(tpl.parts, fileNames...)
 }
 
 func (tpl *TplData) SetLayoutPath(path string) {
@@ -74,6 +95,9 @@ func (tpl *TplData) SetLayoutPath(path string) {
 }
 func (tpl *TplData) SetPagePath(path string) {
 	tpl.pagePath = path
+}
+func (tpl *TplData) GetPagePath() string {
+	return tpl.pagePath
 }
 func (tpl *TplData) SetPartsPath(path string) {
 	tpl.partsPath = path
@@ -83,10 +107,12 @@ func (tpl *TplData) SetPartsPath(path string) {
 func (tpl *TplData) Write(w io.Writer) error {
 	layout := filepath.Join(tpl.layoutPath, tpl.layout)
 	page := filepath.Join(tpl.pagePath, tpl.page)
+	// tpl.AddFiles(layout, page)
 
-	tpl.AddFiles(layout, page)
-	tpl.AddFiles(tpl.parts...)
-	return mtpl.Write(w, tpl.assignData, tpl.TemplateFiles...)
+	tpl.AddFilesWithPath(tpl.partsPath, tpl.parts...)
+
+	tplFiles := append([]string{layout, page}, tpl.TemplateFiles...)
+	return mtpl.Write(w, tpl.assignData, tplFiles...)
 }
 
 func (tpl *TplData) DebugPrint(s string) {
@@ -113,11 +139,23 @@ func (tpl *TplData) LoadFormYaml(data map[string]interface{}, yamlfile string, i
 		return err
 	}
 
-	// データを整形する
 	items := form["items"].(map[interface{}]interface{})
-	for name, i_item := range items {
+
+	// テンプレートを追加
+	for _, i_item := range items {
 		item := i_item.(map[interface{}]interface{})
-		d, ok := data[name.(string)]
+		tpl.AddParts("form/" + item["type"].(string) + ".tpl")
+	}
+
+	if data == nil {
+		// からのデータを入れる
+		data = map[string]interface{}{}
+	}
+
+	tpl.Assign("FormItem", func(itemID string) interface{} {
+		// データを整形する
+		item := items[itemID].(map[interface{}]interface{})
+		d, ok := data[itemID]
 		if !ok {
 			d = item["default"]
 		}
@@ -126,13 +164,11 @@ func (tpl *TplData) LoadFormYaml(data map[string]interface{}, yamlfile string, i
 		for _, key := range inheritKeys {
 			item[key] = tpl.assignData[key]
 		}
-		// 代入する
-		items[name] = item
-	}
 
-	// TODO: バリデーション機能を作る
+		// TODO: バリデーション機能を作る
 
-	tpl.Assign("FormData", items)
+		return item
+	})
 
 	return nil
 }
